@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  student-microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    environment:
+      - PORT=${PORT:-8080}
+    container_name: student-microservice
+    restart: unless-stopped
