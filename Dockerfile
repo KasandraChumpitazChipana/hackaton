@@ -1,29 +1,27 @@
-# Etapa 1: Build
-FROM eclipse-temurin:17-jdk-alpine AS builder
+# Etapa 1: Build con Maven
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de Maven
+# Copia los archivos de configuración
 COPY pom.xml .
 COPY src ./src
 
-# Construir la aplicación
-RUN ./mvnw clean package -DskipTests
+# Construye el proyecto y genera el jar
+RUN mvn clean package -DskipTests
 
-# Etapa 2: Crear imagen final con scratch
-FROM gcr.io/distroless/java17-debian11:nonroot
+# Etapa 2: Imagen ligera para ejecución
+FROM eclipse-temurin:17-jdk-alpine
 
-# Crear usuario no root
-USER nonroot
+WORKDIR /app
 
-# Copiar el JAR desde la etapa de build
-COPY --from=builder /app/target/*.jar /app/app.jar
+# Copia el jar desde el build stage
+COPY --from=build /app/target/student-microservice-1.0.0.jar app.jar
 
-# Exponer el puerto (se puede cambiar con variable de entorno)
+# Puerto expuesto (por defecto 8080, puedes cambiar si usas otra config) | docker run -d --name student-container chumpitazkasandra/student:latest
+# docker push chumpitazkasandra/student:latest
 EXPOSE 8080
 
-# Definir variable de entorno para el puerto
-ENV PORT=8080
-
-# Ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Comando por defecto
+ENTRYPOINT ["java", "-jar", "app.jar"]
