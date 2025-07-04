@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rosario-deployment
+  namespace: rosario-namespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rosario-app
+  template:
+    metadata:
+      labels:
+        app: rosario-app
+    spec:
+      containers:
+      - name: student-container
+        image: chumpitazkasandra/student:latest
+        ports:
+        - containerPort: 8080
+        - containerPort: 8087
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
