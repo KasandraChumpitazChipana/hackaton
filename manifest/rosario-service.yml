@@ -16,3 +16,14 @@ spec:
       targetPort: 8087
       protocol: TCP
   type: ClusterIP
+
+#kubectl apply -f rosario-namespace.yml
+#kubectl apply -f rosario-service.yml
+#kubectl apply -f rosario-deployment.yml
+
+#kubectl get pods -n rosario-namespace
+
+#kubectl port-forward -n rosario-namespace service/rosario-service 9090:8080
+
+# kubectl port-forward -n rosario-namespace pod/[nombre-del-pod] 9090:8080
+
